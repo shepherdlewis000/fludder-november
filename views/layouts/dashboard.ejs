@@ -1,0 +1,89 @@
+<% if (!user) { %>
+    <!-- <p>Welcome! Please <a href="/add_article">Add article</a>.</p> -->
+    <script>
+      window.location.href="/login";
+    </script>
+    <p>This site works best with Javascript enabled. If you'd like to try it anyway, click <a href="/login">here</a>.</p>
+    <% } else { %>
+        
+        <!DOCTYPE html>
+        <html>
+        
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+            <title>Dashboard - Fludder</title>
+            <meta name="description" content="This is a simple note-taking app exercise using Node/Express, Passport.js local auth and MongoDB/Mongoose.">
+            <link rel="stylesheet" href="css/bootstrap.min.css">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+            <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"> -->
+            <link rel="stylesheet" href="css/Login-Form-Dark.css">
+            <link rel="stylesheet" href="css/Profile-Edit-Form-1.css">
+            <link rel="stylesheet" href="css/Profile-Edit-Form.css">
+        </head>
+        
+        <body>
+            <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient">
+                <div class="container"><a class="navbar-brand logo" href="/">Fludder</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarNav"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse"
+                        id="navbarNav">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item"><a class="nav-link" href="all_articles">Articles</a></li>
+                            <li class="nav-item"><a class="nav-link" href="add_article2">Add Article</a></li>
+                            <li class="nav-item"><a class="nav-link" href="logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="page projects-page">
+                <section class="portfolio-block projects-cards">
+                    <div class="container">
+                        <div class="heading">
+                            <h2>Dashboard</h2>
+                        </div>
+                        <div class="row">
+
+                    <% if(!articles) console.log("NO ARTICLES 89");
+                    
+                    articles.forEach(curr => { 
+                        let createdAt = new Date(curr.createdAt.toDateString()); 
+                        createdAt = createdAt.toString().split(" ").splice(0, 4).join(" "); 
+                        let myUrl = "http://" + host + "/article/" + curr._id; %>
+                    
+                                        <div class="col-md-6 col-lg-4">
+                        <div class="card border-0">
+                            <a href="<%- myUrl %>"><img class="card-img-top scale-on-hover" src="<%- curr.link %>" alt="Card Image"></a>
+                            <div class="card-body">
+                                <h4><a href="<%- myUrl %>"><%= curr.title %></a></h6>
+                                <p class="text-muted"><%= createdAt %></p>
+                                <h6 class="card-text"><%= curr.subtitle %></h6>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer">
+        <div class="container">
+            <div class="links"><a href="about">About</a></div>
+            <div class="social-icons"></div>
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="js/bs-init.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script> -->
+    <script src="js/Profile-Edit-Form.js"></script>
+    <script src="js/theme.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+        <% } %>

@@ -1,0 +1,112 @@
+<% if (!user) { %>
+<p>Welcome Home! Please <a href="/login">log in</a>.</p>
+<% } else { %>
+
+<p>
+  Hello <%= user.username %>, welcome home! <a href="/logout">logout</a><br />
+  <a href="add_article">Add article</a>
+
+  Your article id: <%= artid %><br />
+  Your user id: <%= userid %><br />
+  <!--Article: <%= articleid %><br /> -->
+  Your link: <%= link %><br />
+
+  <img src="<%= link %>" />
+
+  <!DOCTYPE html>
+</p>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <title>Article - Fludder</title>
+    <meta
+      name="description"
+      content="This is a simple note-taking app exercise using Node/Express, Passport.js local auth and MongoDB/Mongoose."
+    />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
+    />
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"
+    /> -->
+    <link rel="stylesheet" href="css/Login-Form-Dark.css" />
+    <link rel="stylesheet" href="css/Profile-Edit-Form-1.css" />
+    <link rel="stylesheet" href="css/Profile-Edit-Form.css" />
+  </head>
+
+  <body>
+    <nav
+      class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient"
+    >
+      <div class="container">
+        <a class="navbar-brand logo" href="#">Fludder</a
+        ><button
+          data-toggle="collapse"
+          class="navbar-toggler"
+          data-target="#navbarNav"
+        >
+          <span class="sr-only">Toggle navigation</span
+          ><span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="articles">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="add_article2">Add Article</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main class="page project-page">
+      <section class="portfolio-block project">
+        <div class="container">
+          <div class="heading">
+            <h2><%= article.title></h2>
+          </div>
+          <div
+            class="image"
+            id="artImage"
+            style="background-image: url('<%- link %>')"
+          ></div>
+          <div class="row">
+            <div class="col-12 col-md-6 col-lg-11 offset-md-1 info">
+              <h3><%= article.subtitle %></h3>
+              <p><%= article.txt %></p>
+            </div>
+          </div>
+          <div class="more-projects"></div>
+        </div>
+      </section>
+    </main>
+    <footer class="page-footer">
+      <div class="container">
+        <div class="links"><a href="about">About</a></div>
+        <div class="social-icons"></div>
+      </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script> -->
+    <script src="assets/js/Profile-Edit-Form.js"></script>
+    <script src="assets/js/theme.js"></script>
+  </body>
+</html>
+
+<% } %>

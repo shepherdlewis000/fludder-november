@@ -1,0 +1,145 @@
+<% if (!user) { %>
+<!-- <p>Welcome! Please <a href="/add_article">Add article</a>.</p> -->
+<script>
+  window.location.href = "/login";
+</script>
+<p>
+  This site works best with Javascript enabled. If you'd like to try it anyway,
+  click <a href="/login">here</a>.
+</p>
+
+<% } else { %>
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <style></style>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <title>Article - Fludder</title>
+    <meta
+      name="description"
+      content="This is a simple note-taking app exercise using Node/Express, Passport.js local auth and MongoDB/Mongoose."
+    />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"
+    />
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"
+    /> -->
+    <link rel="stylesheet" href="../../css/Login-Form-Dark.css" />
+    <link rel="stylesheet" href="../../css/Profile-Edit-Form-1.css" />
+    <link rel="stylesheet" href="../../css/Profile-Edit-Form.css" />
+    <link rel="stylesheet" href="../../css/pell.css" />
+  </head>
+
+  <body>
+    <nav
+      class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient"
+    >
+      <div class="container">
+        <a class="navbar-brand logo" href="/">Fludder</a
+        ><button
+          data-toggle="collapse"
+          class="navbar-toggler"
+          data-target="#navbarNav"
+        >
+          <span class="sr-only">Toggle navigation</span
+          ><span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="../dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../all_articles">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../add_article">Add Article</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main class="page project-page">
+      <section class="portfolio-block project">
+        <div class="container">
+          <div class="heading"><h2><%= article.title %></h2></div>
+          <div id="artImage" class="text-center">
+            <a href="<%- article.link %>"
+              ><img
+                class="d-inline-block img-fluid mb-6"
+                src="<%- article.link %>"
+            /></a>
+          </div>
+
+          <div class="row">
+            <div class="col-12 col-md-12 col-lg-11 offset-md-1 info">
+              <h3 class="ml-3"><%= article.subtitle %></h3>
+              <h4><%= createdAt %></h4>
+              <h4>By <%= user.fullname %></h4>
+              <!-- FIX -->
+              <!-- <p><%= article.txt %></p> -->
+              <div id="editor" class="pell"></div>
+              <div class="mt-3 test-output">
+                <h3>Preview:</h3>
+                <div id="text-output"></div>
+
+                <h3 class="test-html-output">Html output:</h3>
+                <pre id="html-output"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="page-footer">
+      <div class="container">
+        <div class="links"><a href="about">About</a></div>
+        <div class="social-icons"></div>
+      </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script> -->
+    <script src="../../js/Profile-Edit-Form.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script src="../../js/pell.js"></script>
+
+    <script>
+      const textOutput = document.getElementById("text-output");
+      const htmlOutput = document.getElementById("html-output");
+      const originalTxt = "<%= article.txt %>";
+
+      // Initialize the preview output
+      textOutput.innerHTML = originalTxt;
+      htmlOutput.innerHTML = originalTxt;
+
+      var editor = window.pell.init({
+        element: document.getElementById("editor"),
+        defaultParagraphSeparator: "p",
+        onChange: function (html) {
+          document.getElementById("text-output").innerHTML = html;
+          document.getElementById("html-output").textContent = html;
+        },
+      }); // end pell init
+      editor.content.innerHTML = originalTxt;
+    </script>
+  </body>
+</html>
+
+<% } %>
