@@ -37,9 +37,7 @@ cloudinary.config({
 const port = process.env.PORT || process.argv[2] || 8080;
 var app = express();
 
-//////////////////////////////////////////////////////////////////////////////////// DB WORKING ON HERE
 // DATABASE SETUP
-//const conn = "mongodb://localhost:27017/dpfinster";
 const ATLASURI = process.env.ATLASURI;
 const connection = mongoose.createConnection(ATLASURI, {
   useNewUrlParser: true,
@@ -253,6 +251,7 @@ app.get("/articlejs/:articleId", function (req, res, next) {
   })();
 });
 
+/* CHANGING TO USE PELL
 app.get("/edit_article/:articleId", (req, res, next) => {
   if (!req.user) {
     res.redirect("/");
@@ -275,6 +274,37 @@ app.get("/edit_article/:articleId", (req, res, next) => {
 
     res.render("index", {
       layout: "edit_article",
+      user: req.user,
+      article: article[0],
+      createdAt: createdAt2,
+      fullname: req.user.fullname,
+    });
+  })(); // end async function findAndAttach
+});
+*/
+
+app.get("/edit_article/:articleId", (req, res, next) => {
+  if (!req.user) {
+    res.redirect("/");
+    return next();
+  }
+  console.log("Entered edit_article route. req.user.id is: " + req.user.id);
+
+  const articleId = req.params.articleId;
+
+  (async function findAndAttach() {
+    const article = await Article.find({
+      author: req.user._id,
+      _id: articleId,
+    });
+
+    let createdAt = new Date(article[0].createdAt.toDateString());
+    console.log(createdAt);
+    let createdAt2 = createdAt.toString().split(" ").splice(0, 4).join(" ");
+    console.log(createdAt2);
+
+    res.render("index", {
+      layout: "edit_pell2",
       user: req.user,
       article: article[0],
       createdAt: createdAt2,
@@ -401,7 +431,7 @@ app.post("/edit_article/:articleId", (req, res, next) => {
     const doc = await Article.findOne({ _id: articleId });
     doc.title = title;
     doc.subtitle = subtitle;
-    doc.txt = txt;
+    doc.txt = txt.trim();
 
     const myResult1 = await doc.save();
     let makeArtUrl =
