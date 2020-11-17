@@ -150,7 +150,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: sessionStore,
-    cookie: { maxAge: 1600000 },
+    cookie: { maxAge: 16000000 },
   })
 );
 app.use(passport.initialize());
@@ -192,7 +192,7 @@ app.post(
   passport.authenticate("local", {
     // redirect back to /login if login fails
     //successRedirect: "/dashboard", // WORK to DO HERE
-    failureRedirect: "/login?loginFailed=true",
+    failureRedirect: "/login?failedLogin=true",
   }),
 
   // end up at / if login works
@@ -201,13 +201,6 @@ app.post(
     res.redirect("/"); // MORE WORK TO DO WITH ABOVE AND DASHBOARD
   }
 );
-
-app.get("/add_article2", function (req, res) {
-  res.render("index", {
-    layout: "add_article2",
-    user: req.user,
-  });
-});
 
 app.get("/add_article", function (req, res) {
   res.render("index", {
@@ -274,7 +267,6 @@ app.get("/edit_article/:articleId", (req, res, next) => {
       author: req.user._id,
       _id: articleId,
     });
-    console.log("Retrieved article: " + article[0]);
 
     let createdAt = new Date(article[0].createdAt.toDateString());
     console.log(createdAt);
@@ -292,7 +284,6 @@ app.get("/edit_article/:articleId", (req, res, next) => {
 });
 
 // Get a single article by it's _id
-// ex:  http://localhost:8081/article/5faa627798f74a9607e6aa34
 app.get("/article/:articleId", function (req, res, next) {
   if (!req.user) {
     res.redirect("/");
@@ -302,21 +293,14 @@ app.get("/article/:articleId", function (req, res, next) {
 
   const articleId = req.params.articleId;
 
-  console.log("req.user._id 258: " + req.user._id);
-  console.log("259 articleId: " + articleId); // GOOD as string
   (async function findAndForward() {
     const article = await Article.find({
       author: req.user._id,
       _id: articleId,
     });
 
-    console.log("article 296: " + article);
-    console.dir(article);
     let createdAt = new Date(article[0].createdAt.toDateString());
     createdAt = createdAt.toString().split(" ").splice(0, 4).join(" ");
-
-    console.log("createdAt 271: " + createdAt);
-    //const createdAt = new Date(article.createdAt).toDateString();
 
     res.render("index", {
       layout: "article",
@@ -346,8 +330,8 @@ app.get("/all_articles", function (req, res, next) {
       uIndentationChar: " ",
       oIndentationChar: " ",
     };
-    console.log("334:");
-    console.dir(articles); // an array
+
+    // console.dir(articles); // an array
     articles.forEach((curr) => {
       //curr.txt = stripHtmlEtc(curr.txt).slice(0, 50);
 
@@ -393,18 +377,55 @@ app.get("/dashboard", function (req, res, next) {
     });
   })();
 });
+// this should be a mistake (only POST requests allowed to posted route)
 app.get("/posted", function (req, res) {
   res.redirect("/dashboard");
 });
+app.post("/edit_article/:articleId", (req, res, next) => {
+  if (!req.user) {
+    res.redirect("/");
+    return next();
+  }
+  console.log("post route to edit_article entered");
+
+  const articleId = req.params.articleId;
+  const { title, subtitle, txt } = req.body;
+  (async function updateArticle() {
+    /* const article = new Article({
+      _id,
+      title,
+      subtitle,
+      txt,
+    });
+    */
+    const doc = await Article.findOne({ _id: articleId });
+    doc.title = title;
+    doc.subtitle = subtitle;
+    doc.txt = txt;
+
+    const myResult1 = await doc.save();
+    let makeArtUrl =
+      "http://" + req.headers.host + "/" + "article/" + articleId;
+    console.log("Article updated: " + makeArtUrl);
+
+    ///////////////////////////////////////////
+    const createdAt = new Date(doc.createdAt).toDateString();
+
+    res.render("index", {
+      layout: "article",
+      user: req.user,
+      article: doc,
+      createdAt: createdAt,
+      fullname: req.user.fullname,
+      makeArtUrl: makeArtUrl,
+      created: true,
+    });
+  })();
+}); ///////////////////////////////////////////////WORKING
 
 app.post("/posted", upload.single("photoupload"), function (req, res, next) {
-  //let userid = req.session.passport.user;
-  //console.log("/posted route req.session.passpot.user: " + req.user);
   let myPath2 = __dirname + "/" + req.file.path;
-  console.log("In callback from upload.single");
 
-  //console.log("req.user:" + req.user);
-  console.log("typeof req.user._id: " + typeof req.user._id);
   console.log("req.user._id: " + req.user._id);
   // Do the cloudinary upload first and in callback, makeArticle
   cloudinary.uploader.upload(myPath2, {}, (err, myResult) => {
@@ -477,7 +498,7 @@ app.post("/register", (req, res, next) => {
 
 app.get("/logout", function (req, res) {
   req.logout();
-  res.redirect("/");
+  res.redirect("/login/?loggedOut=true");
 });
 
 app.use(express.static(__dirname + "/static"));

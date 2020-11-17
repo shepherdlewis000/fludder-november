@@ -1,10 +1,13 @@
 <% if (user) { %>
-  <!-- <p>Welcome! Please <a href="/add_article">Add article</a>.</p> -->
-  <script>
-    window.location.href="dashboard";
-  </script>
-  <p>This site works better with Javascript enabled. If you'd like to try it anyway, click <a href="dashboard">here</a>.</p>
-  <% } else { %>
+<!-- <p>Welcome! Please <a href="/add_article">Add article</a>.</p> -->
+<script>
+  window.location.href = "dashboard";
+</script>
+<p>
+  This site works better with Javascript enabled. If you'd like to try it
+  anyway, click <a href="dashboard">here</a>.
+</p>
+<% } else { %>
 
 <!DOCTYPE html>
 <html>
@@ -105,7 +108,7 @@
               <div class="form-row">
                 <div class="col">
                   <button class="btn btn-primary btn-block" type="submit">
-                    Login
+                    Register
                   </button>
                 </div>
               </div>

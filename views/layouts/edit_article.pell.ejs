@@ -1,15 +1,19 @@
 <% if (!user) { %>
-  <!-- <p>Welcome! Please <a href="/add_article">Add article</a>.</p> -->
-  <script>
-    window.location.href="/login";
-  </script>
-  <p>This site works best with Javascript enabled. If you'd like to try it anyway, click <a href="/login">here</a>.</p>
-  <% } else { %>
-<!DOCTYPE html>
+<!-- <p>Welcome! Please <a href="/add_article">Add article</a>.</p> -->
+<script>
+  window.location.href = "/login";
+</script>
+<p>
+  This site works best with Javascript enabled. If you'd like to try it anyway,
+  click <a href="/login">here</a>.
 </p>
+
+<% } else { %>
+<!DOCTYPE html>
 
 <html>
   <head>
+    <style></style>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -20,10 +24,14 @@
       name="description"
       content="This is a simple note-taking app exercise using Node/Express, Passport.js local auth and MongoDB/Mongoose."
     />
-    <link rel="stylesheet" href="../../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"
     />
     <!-- <link
       rel="stylesheet"
@@ -32,6 +40,7 @@
     <link rel="stylesheet" href="../../css/Login-Form-Dark.css" />
     <link rel="stylesheet" href="../../css/Profile-Edit-Form-1.css" />
     <link rel="stylesheet" href="../../css/Profile-Edit-Form.css" />
+    <link rel="stylesheet" href="../../css/pell.css" />
   </head>
 
   <body>
@@ -67,28 +76,33 @@
       </div>
     </nav>
     <main class="page project-page">
-      
       <section class="portfolio-block project">
         <div class="container">
-          <div class="heading">
-            <h2><%= article.title %></h2>
+          <div class="heading"><h2><%= article.title %></h2></div>
+          <div id="artImage" class="text-center">
+            <a href="<%- article.link %>"
+              ><img
+                class="d-inline-block img-fluid mb-6"
+                src="<%- article.link %>"
+            /></a>
           </div>
-          <div
-            id="artImage"
-          ><a href="<%- article.link %>"><img class='img-fluid' src="<%- article.link %>"></a>
-        </div>
-          <!-- removed from div class='image' -->
-          <!-- style="background-image: url('<%- article.link %>')"> -->
-          
+
           <div class="row">
             <div class="col-12 col-md-12 col-lg-11 offset-md-1 info">
               <h3 class="ml-3"><%= article.subtitle %></h3>
               <h4><%= createdAt %></h4>
-              <h4>By <%= user.fullname %></h4> <!-- FIX -->
-              <p><%= article.txt %></p>
+              <h4>By <%= user.fullname %></h4>
+
+              <div id="editor" class="pell"></div>
+              <div class="mt-5 test-output">
+                <h3>Preview:</h3>
+                <div id="text-output"></div>
+
+                <h3 class="test-html-output">Html output:</h3>
+                <pre id="html-output"></pre>
+              </div>
             </div>
           </div>
-          <div class="more-projects"></div>
         </div>
       </section>
     </main>
@@ -100,9 +114,31 @@
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script> -->
     <script src="../../js/Profile-Edit-Form.js"></script>
     <script src="../../js/theme.js"></script>
+    <script src="../../js/pell.js"></script>
+
+    <script>
+      const textOutput = document.getElementById("text-output");
+      const htmlOutput = document.getElementById("html-output");
+      const originalTxt = `<%= article.txt %>`;
+
+      console.log("originalTxt: " + originalTxt);
+
+      // Initialize the preview output
+      textOutput.innerHTML = originalTxt;
+      htmlOutput.innerHTML = originalTxt;
+
+      var editor = window.pell.init({
+        element: document.getElementById("editor"),
+        defaultParagraphSeparator: "p",
+        onChange: function (html) {
+          document.getElementById("text-output").innerHTML = html;
+          document.getElementById("html-output").textContent = html;
+        },
+      }); // end pell init
+      editor.content.innerHTML = originalTxt;
+    </script>
   </body>
 </html>
 

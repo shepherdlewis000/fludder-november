@@ -40,6 +40,22 @@
     <!-- <link rel="stylesheet" href="css/Profile-Edit-Form-1.css" /> -->
     <link rel="stylesheet" href="css/fludder.css" />
     <link rel="stylesheet" href="css/Profile-Edit-Form.css" />
+    <style>
+      #html-output {
+        white-space: pre-wrap;
+      }
+      @media screen and (min-size: 768px) {
+        .artImage {
+          float: right;
+        }
+      }
+      @media screen and (max-size: 767px) {
+        .artImage {
+          /* A fake rule to not get warning- revisit later */
+          background-color: paleturquoise;
+        }
+      }
+    </style>
   </head>
 
   <body>
@@ -62,7 +78,7 @@
               <a class="nav-link" href="dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="add_article2">Add Article</a>
+              <a class="nav-link" href="add_article">Add Article</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="logout">Logout</a>
@@ -101,24 +117,25 @@ What we need to generate
             createdAt.toString().split(" ").splice(0, 4).join(" "); let myUrl =
             "http://" + host + "/article/" + curr._id; %>
             <div class="item">
-              <div class="row">
+              <div class="row border-bottom">
                 <div class="col-md-6">
                   <h3><a href="<%= myUrl %>"><%= curr.title %></a></h3>
                   <h4 class="organization"><%= curr.subtitle %></h4>
                   <span class="period align-top"><%= createdAt %></span>
 
-                  <p class="text-muted"><%= curr.txt %></p>
+                  <!-- <p class="text-muted"><%= curr.txt %></p> -->
+                  <pre id="html-output" class="text-muted"><%= curr.txt %></pre>
                 </div>
                 <div class="col-md-6">
                   <!--<span class="period text-center"><%= createdAt %></span>-->
                   <a href="<%- myUrl %>"
                     ><img
-                      class="d-block img-shrunk img-fluid float-right scale-on-hover"
+                      class="mb-3 artImage d-block img-shrunk img-fluid float-right scale-on-hover"
                       src="<%- curr.link %>"
                   /></a>
                 </div>
               </div>
-              <p class="text-muted"><%= curr.txt %></p>
+              <!-- <p class="text-muted"><%= curr.txt %></p> -->
             </div>
             <% }); %>
           </div>
