@@ -411,6 +411,7 @@ app.get("/dashboard", function (req, res, next) {
 app.get("/posted", function (req, res) {
   res.redirect("/dashboard");
 });
+
 app.post("/edit_article/:articleId", (req, res, next) => {
   if (!req.user) {
     res.redirect("/");
@@ -419,39 +420,59 @@ app.post("/edit_article/:articleId", (req, res, next) => {
   console.log("post route to edit_article entered");
 
   const articleId = req.params.articleId;
-  const { title, subtitle, txt } = req.body;
+  const { title, subtitle, txt, deleteArticle } = req.body;
+
   (async function updateArticle() {
-    /* const article = new Article({
-      _id,
-      title,
-      subtitle,
-      txt,
-    });
-    */
     const doc = await Article.findOne({ _id: articleId });
-    doc.title = title;
-    doc.subtitle = subtitle;
-    doc.txt = txt.trim();
+    console.log("427");
+    //const deleteArticle = req.params.deleteArticle;
 
-    const myResult1 = await doc.save();
-    let makeArtUrl =
-      "http://" + req.headers.host + "/" + "article/" + articleId;
-    console.log("Article updated: " + makeArtUrl);
+    console.log("deleteArticle: " + deleteArticle);
 
-    ///////////////////////////////////////////
-    const createdAt = new Date(doc.createdAt).toDateString();
+    if (doc && deleteArticle === "true") {
+      console.log("entered if 430");
+      await Article.deleteOne({ _id: articleId }, function (err) {
+        if (err) {
+          console.log("error deleting article 437");
+          res.redirect("/dashboard?deleteFailed=true"); // set alert of failure
+          return next();
+        }
+        console.log("Forwarding to dashboard with deleteSuccess=true param");
+        res.redirect("/dashboard?deleteSuccess=true");
+        return next();
+      });
+    } // end if deleteArticle
+    else {
+      console.log("446 shouldnt be here if deleting");
+      doc.title = title;
+      doc.subtitle = subtitle;
+      doc.txt = txt.trim();
 
-    res.render("index", {
-      layout: "article",
-      user: req.user,
-      article: doc,
-      createdAt: createdAt,
-      fullname: req.user.fullname,
-      makeArtUrl: makeArtUrl,
-      created: true,
-    });
+      const myResult1 = await doc.save();
+      let makeArtUrl =
+        "http://" + req.headers.host + "/" + "article/" + articleId;
+      console.log("Article updated: " + makeArtUrl);
+
+      ///////////////////////////////////////////
+      const createdAt = new Date(doc.createdAt).toDateString();
+
+      // trouble here.. was trying to just reuse article route
+      makeArtUrl = makeArtUrl + "/?articleCreated=true";
+      //res.redirect(makeArtUrl);
+
+      res.render("index", {
+        layout: "article",
+        user: req.user,
+        article: doc,
+        createdAt: createdAt,
+        fullname: req.user.fullname,
+        makeArtUrl: makeArtUrl,
+        created: true,
+      });
+    }
   })();
-}); ///////////////////////////////////////////////WORKING
+  console.log("Exiting route edit_article");
+});
 
 app.post("/posted", upload.single("photoupload"), function (req, res, next) {
   let myPath2 = __dirname + "/" + req.file.path;
@@ -486,10 +507,13 @@ app.post("/posted", upload.single("photoupload"), function (req, res, next) {
       let makeArtUrl =
         "http://" + req.headers.host + "/" + "article/" + article._id;
       console.log("Article created: " + makeArtUrl);
+      makeArtUrl = makeArtUrl + "/?created=true";
+      res.redirect(makeArtUrl);
 
       ///////////////////////////////////////////
       const createdAt = new Date(article.createdAt).toDateString();
 
+      /*
       res.render("index", {
         layout: "article",
         user: req.user,
@@ -499,6 +523,7 @@ app.post("/posted", upload.single("photoupload"), function (req, res, next) {
         makeArtUrl: makeArtUrl,
         created: true,
       });
+      */
     })();
   }); // end cloudinary.uploader.upload
 }); // end post to posted route

@@ -55,6 +55,36 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
+                            <div 
+                                id="articleDeletedAlert"
+                                class="d-none alert alert-secondary w-100 fade show mt-4"
+                                role="alert"
+                            >
+                                Article deleted successfully.
+                                <button 
+                                    type="button"
+                                    class="close"
+                                    data-dismiss="alert"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div 
+                                id="deleteFailedAlert"
+                                class="d-none alert alert-secondary w-100 fade show mt-4"
+                                role="alert"
+                            >
+                                You have no articles. Use the menu above to add your first!
+                                <button 
+                                    type="button"
+                                    class="close"
+                                    data-dismiss="alert"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
 
                             <h2>Dashboard</h2>
                         </div>
@@ -97,11 +127,25 @@
     <script>
         const noArticlesAlert = document.getElementById('noArticlesAlert');
         const articleCards = document.getElementsByClassName('articleCard');
-        
+        const deleteFailedAlert = document.getElementById('deleteFailedAlert');
+        const articleDeletedAlert = document.getElementById('articleDeletedAlert');
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
         console.log("articleCards.length: " + articleCards.length);
         if(articleCards.length === 0){
             noArticlesAlert.classList.remove('d-none');
             noArticlesAlert.classList.add('d-block');
+        }
+
+        if(urlParams.get('deleteSuccess') === "true"){
+            articleDeletedAlert.classList.remove('d-none');
+            articleDeletedAlert.classList.add('d-block');
+        }
+        if(urlParams.get('deleteFailed') === "true"){
+            deleteFailedAlert.classList.remove('d-none');
+            deleteFailedAlert.classList.add('d-block');
         }
 
     </script>

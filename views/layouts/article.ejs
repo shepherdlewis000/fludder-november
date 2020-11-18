@@ -71,11 +71,19 @@
         <div class="container">
           <div class="heading">
             <!-- Can mess around later and see if badge is better INSIDE h2-->
-            <h2 class="d-inline"><%= article.title %></h2>
+            <!-- <h2 class="d-inline"><%= article.title %></h2>
             <a href="/edit_article/<%- article.id %>">
               <span class="badge badge-primary float-right mr-4">Edit</span>
             </a>
+            -->
+            <h2 id="titleHeading" class="d-inline">
+              <%= article.title %>
+            </h2>
+            <a href="/edit_article/<%= article.id %>">
+              <span class="badge badge-primary ml-2" style="vertical-align: super;">Edit article</span>
+            </a>
           </div>
+          
           <div
             id="artImage" class="text-center"
           ><a href="<%- article.link %>"><img class='d-inline-block img-fluid mb-6' src="<%- article.link %>"></a>
@@ -91,7 +99,8 @@
               <div><%- article.txt %></div>
             </div>
           </div>
-          <div class="more-projects"></div>
+          <!-- more-projects will give a row at the bottom to fill if want to -->
+          <!-- <div class="more-projects"></div> -->
         </div>
       </section>
     </main>
