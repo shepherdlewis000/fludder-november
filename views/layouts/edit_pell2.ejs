@@ -162,9 +162,9 @@
               </form>
               <!-- these used to live in form. But moving out to stop from triggering form
               Might need to remove the preventDefault and stopPropagation -->
-              <button id="saveButton" class="btn btn-primary">Save</a>
-                <button id="deleteButton" class="btn btn-danger" 
-                    data-toggle="modal" data-target="#exampleModal">Delete</a>
+              <button id="saveButton" class="btn btn-primary">Save</button>
+              <button id="deleteButton" class="btn btn-danger" 
+                    data-toggle="modal" data-target="#exampleModal">Delete</button>
               </div>
             </div>
         </div>
@@ -207,14 +207,14 @@
 
     <script>
       const saveButton = document.getElementById('saveButton');
-      const previewOutput = document.getElementById('preview');
+      // const previewOutput = document.getElementById('preview');
       
       const originalTxt = document.getElementById('originalTxt').innerText;
 
       //console.log(originalTxt);
 
       // Initialize preview output
-      previewOutput.innerHTML = originalTxt;
+      //previewOutput.innerHTML = originalTxt || "";
 
       var editor = window.pell.init({
           actions: [
@@ -233,7 +233,7 @@
         element: document.getElementById("editor"),
         defaultParagraphSeparator: "p",
         onChange: function (html) {
-          document.getElementById("preview").innerHTML = html;
+          //document.getElementById("preview").innerHTML = html;
           //document.getElementById("html-output").textContent = html;
         },
       }); // end pell init
@@ -254,8 +254,8 @@
       });  // end saveButton.addEventListener
 
       deleteButton.addEventListener("click", function(e){
-          e.stopPropagation();
-          e.preventDefault();
+          // e.stopPropagation();
+          // e.preventDefault();
           console.log('Clicked delete button');
 
       }); 
@@ -272,6 +272,7 @@
 
         theForm.action = newActionURL;
         */
+       console.log("reached 275 in event listener");
         theForm.submit();
       });
 

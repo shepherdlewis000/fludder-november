@@ -144,7 +144,7 @@ const sessionStore = new MongoStore({
 
 app.use(
   session({
-    secret: "jkljkljkjiwejhohroihjfbja",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     store: sessionStore,
@@ -184,19 +184,22 @@ app.get(
     });
   }
 );
-
+/*
 app.post(
   "/login",
-  passport.authenticate(
-    "local",
-    {
-      // redirect back to /login if login fails
-      //successRedirect: "/dashboard", // WORK to DO HERE
-      failureRedirect: "/login?failedLogin=true",
-    },
+  passport.authenticate("local", {
+    // redirect back to /login if login fails
+    successRedirect: "/dashboard?welcome=true",
+    failureRedirect: "/login?failedLogin=true",
+  })
+);
 
-    // end up at / if login works
-    function doLogin(req, res) {
+////////////////////////////////////////////////
+console.log("198 still got here after login");
+// in dashboard, if welcome=true, increment loginCount in user
+// end up at / if login works
+*/
+/* function doLogin(req, res) {
       console.log("req.user: " + req.user);
       //req.user.loginCount += 1;
       //req.user.save();
@@ -206,8 +209,34 @@ app.post(
       );
       // MORE WORK TO DO WITH ABOVE AND DASHBOARD
     }
-  )
-);
+  ) */
+app.post("/login", function doLogin(req, res, next) {
+  passport.authenticate("local", function (err, user, info) {
+    if (err) {
+      console.log("216 Error authenticating: " + err);
+      return next(err);
+    }
+    if (!user) {
+      console.log("Login failed");
+      return res.redirect("/login/?loginFailed=true");
+    }
+    req.logIn(user, async function (err) {
+      if (err) {
+        console.log("225 Error logging in");
+        return next(err);
+      }
+      req.user.loginCount = req.user.loginCount + 1;
+      let result = await req.user.save();
+      //console.log("230 Result from req.user.save: " + result);
+
+      console.log(
+        "230 req.user.loginCount after increment: " + req.user.loginCount
+      );
+      // Successful log in // PARAM FOR LOGINCOUNT WASN"T WORKING HERE.
+      return res.redirect(`/dashboard`);
+    });
+  })(req, res, next);
+});
 
 app.get("/add_article", function (req, res) {
   res.render("index", {
@@ -341,8 +370,11 @@ app.get("/article/:articleId", function (req, res, next) {
         _id: articleId,
       },
       (err) => {
-        console.log("Couldn't find article error line 333.");
-        res.redirect("/dashboard/?articleNotFound=true");
+        if (err) {
+          console.log("Couldn't find article error line 373.");
+          res.redirect("/dashboard/?articleNotFound=true");
+          return next();
+        }
       }
     );
 

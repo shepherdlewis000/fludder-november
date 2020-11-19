@@ -19,7 +19,7 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
             <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"> -->
             <link rel="stylesheet" href="/css/Login-Form-Dark.css">
-            <link rel="stylesheet" href="/css/Profile-Edit-Form-1.css">
+            <!-- <link rel="stylesheet" href="/css/Profile-Edit-Form-1.css"> -->
             <link rel="stylesheet" href="/css/Profile-Edit-Form.css">
         </head>
         
@@ -37,7 +37,7 @@
                 </div>
             </nav>
             <main class="page projects-page">
-                <section class="portfolio-block projects-cards">
+                <section class="portfolio-block projects-cards" style="padding-top: 70px">
                     <div class="container">
                         <div class="heading">
                             <div 
@@ -87,9 +87,14 @@
                             </div>
 
                             <h2>Dashboard</h2>
+                            <div id="search">
+                                <input type="text" id="searchBox" placeholder="Search.." name="searchBox">
+                                <!-- <button type="submit"><i class="fa fa-search"></i></button> -->
+                            </div>
                         </div>
-                        <div class="row">
 
+                        <div class="row" id="theArticles" class="d-block">
+                            <div id="searchResults"></div>
                     <% if(!articles) console.log("NO ARTICLES 89");
 
                     articles.forEach(curr => { 
@@ -101,8 +106,8 @@
                         <div class="card articleCard border-0">
                             <a href="<%- myUrl %>"><img class="card-img-top scale-on-hover" src="<%- curr.link %>" alt="Card Image"></a>
                             <div class="card-body">
-                                <h4><a href="<%- myUrl %>"><%= curr.title %></a></h6>
-                                <p class="text-muted"><%= createdAt %></p>
+                                <h4 class="mb-0"><a href="<%- myUrl %>"><%= curr.title %></a></h6>
+                                <p class="mb-0 text-muted"><%= createdAt %></p>
                                 <h6 class="card-text"><%= curr.subtitle %></h6>
                             </div>
                         </div>
@@ -148,7 +153,10 @@
             deleteFailedAlert.classList.add('d-block');
         }
 
+        // SEARCH
+        
     </script>
+    
 </body>
 
 </html>

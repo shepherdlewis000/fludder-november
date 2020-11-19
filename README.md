@@ -1,7 +1,5 @@
 # fludder-blogish-todo Chingu "Fludder" Solo project
 
-![Design](./static/design.png)
-
 Prep work for a Tier-3 Chingu.io team programming cohort. Solo project. Uses Node/Express, Passport.js with local authentication using sessions and MongoDB/Mongoose, and Vanilla JS, EJS templates. Database hosted by MongoDB/Atlas; uploaded photos are saved to Cloudinary cloud via API and a link saved to my database. This was done to add data persistance rather than having photos periodically vanish due to how Heroku works. Frontend presentation is loosely based on photo provided. I "cheated" a bit by using an app "Bootstrap Studio" for some starter HTML/CSS. Chingu.io provided app specifications are below.
 
 Currently working on the "Search" feature and broken linking, alerts, double posts, deletes, more... This app could be more neatly rewritten using a REST API sending JSON and using JS on the frontend. I still may do that. This is my first time using EJS templates so it's likely a bit "busy" and "all over the place" in it's request handling ;-)
@@ -28,6 +26,10 @@ General instructions for all Solo Projects are located in your Chingu Handbook.
 For detailed requirements, please checkout the following.
 
 Take whatever packages and backend frameworks of your choice.
+
+### Mockup provided
+
+![Design](./static/design.png)
 
 ### Requirements
 
