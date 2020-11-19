@@ -1,5 +1,5 @@
 /notes-js
 *.env
 /node_modules
-.vscode
+/.vscode
 /uploads
