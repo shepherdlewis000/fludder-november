@@ -187,17 +187,26 @@ app.get(
 
 app.post(
   "/login",
-  passport.authenticate("local", {
-    // redirect back to /login if login fails
-    //successRedirect: "/dashboard", // WORK to DO HERE
-    failureRedirect: "/login?failedLogin=true",
-  }),
+  passport.authenticate(
+    "local",
+    {
+      // redirect back to /login if login fails
+      //successRedirect: "/dashboard", // WORK to DO HERE
+      failureRedirect: "/login?failedLogin=true",
+    },
 
-  // end up at / if login works
-  function (req, res) {
-    req.user.loginCount++;
-    res.redirect("/"); // MORE WORK TO DO WITH ABOVE AND DASHBOARD
-  }
+    // end up at / if login works
+    function doLogin(req, res) {
+      console.log("req.user: " + req.user);
+      //req.user.loginCount += 1;
+      //req.user.save();
+
+      res.redirect(
+        `/dashboard/?welcome=true&loginCount=${req.user.loginCount}`
+      );
+      // MORE WORK TO DO WITH ABOVE AND DASHBOARD
+    }
+  )
 );
 
 app.get("/add_article", function (req, res) {
@@ -319,15 +328,23 @@ app.get("/article/:articleId", function (req, res, next) {
     res.redirect("/");
     return next();
   }
-  console.log("entered route article/:id");
+  console.log("entered route article/:id " + req.params.articleId);
 
   const articleId = req.params.articleId;
 
   (async function findAndForward() {
-    const article = await Article.find({
-      author: req.user._id,
-      _id: articleId,
-    });
+    console.log("327 entered findAndForward");
+
+    const article = await Article.find(
+      {
+        author: req.user._id,
+        _id: articleId,
+      },
+      (err) => {
+        console.log("Couldn't find article error line 333.");
+        res.redirect("/dashboard/?articleNotFound=true");
+      }
+    );
 
     let createdAt = new Date(article[0].createdAt.toDateString());
     createdAt = createdAt.toString().split(" ").splice(0, 4).join(" ");
@@ -423,23 +440,23 @@ app.post("/edit_article/:articleId", (req, res, next) => {
   const { title, subtitle, txt, deleteArticle } = req.body;
 
   (async function updateArticle() {
+    // Make sure doc actually exists
     const doc = await Article.findOne({ _id: articleId });
-    console.log("427");
-    //const deleteArticle = req.params.deleteArticle;
 
-    console.log("deleteArticle: " + deleteArticle);
+    console.log("430 entered updateArticle route with articleId: " + articleId);
+    console.log("431 deleteArticle is: " + deleteArticle);
+
+    //const deleteArticle = req.params.deleteArticle;
 
     if (doc && deleteArticle === "true") {
       console.log("entered if 430");
       await Article.deleteOne({ _id: articleId }, function (err) {
         if (err) {
           console.log("error deleting article 437");
-          res.redirect("/dashboard?deleteFailed=true"); // set alert of failure
-          return next();
+          return res.redirect("/dashboard?deleteFailed=true"); // set alert of failure
         }
         console.log("Forwarding to dashboard with deleteSuccess=true param");
-        res.redirect("/dashboard?deleteSuccess=true");
-        return next();
+        return res.redirect("/dashboard?deleteSuccess=true");
       });
     } // end if deleteArticle
     else {
@@ -458,8 +475,8 @@ app.post("/edit_article/:articleId", (req, res, next) => {
 
       // trouble here.. was trying to just reuse article route
       makeArtUrl = makeArtUrl + "/?articleCreated=true";
-      //res.redirect(makeArtUrl);
-
+      res.redirect(makeArtUrl);
+      /*
       res.render("index", {
         layout: "article",
         user: req.user,
@@ -469,6 +486,7 @@ app.post("/edit_article/:articleId", (req, res, next) => {
         makeArtUrl: makeArtUrl,
         created: true,
       });
+*/
     }
   })();
   console.log("Exiting route edit_article");
