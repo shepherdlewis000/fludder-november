@@ -94,27 +94,14 @@
             <div class="heading">
               <h2 class="text-center">All articles</h2>
             </div>
-            <!-- END STATIC ----------------------
-What we need to generate
-<div class="item">
-    <div class="row">
-        <div class="col-md-6">
-            <h3><a href="LINK">First Article Title</a></h3>
-            <h4 class="organization">Subtitle</h4>
-        </div>
-        <div class="col-md-6">
-            <span class="period">Date</span></div>
-        </div>
-    </div>
-    <p class="text-muted">TXT</p>
-</div>
--->
+            <!-- end div.heading -->
 
-            <% if(!articles) console.log("NO ARTICLES 89");
+            <% if(!articles){ console.log("NO ARTICLES 89"); }
             articles.forEach(curr => { let createdAt = new
             Date(curr.createdAt.toDateString()); createdAt =
-            createdAt.toString().split(" ").splice(0, 4).join(" "); let myUrl =
-            "http://" + host + "/article/" + curr._id; %>
+            createdAt.toString().split(" ").splice(0, 4).join(" "); let myUrl
+            ="http://" + host + "/article/" + curr._id; %>
+
             <div class="item">
               <div class="row border-bottom">
                 <div class="col-md-6">
@@ -136,9 +123,13 @@ What we need to generate
               </div>
               <!-- <p class="text-muted"><%= curr.txt %></p> -->
             </div>
+            <!-- end div.item -->
+
             <% }); %>
           </div>
+          <!-- end div.work-experience.group-->
         </div>
+        <!-- end div.container -->
       </section>
     </main>
     <footer class="page-footer">
@@ -154,6 +145,7 @@ What we need to generate
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script> -->
     <script src="/js/Profile-Edit-Form.js"></script>
     <script src="/js/theme.js"></script>
+    <script src="/js/textVersion.js"></script>
   </body>
 </html>
 <% } %>

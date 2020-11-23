@@ -116,9 +116,7 @@
               </button>
             </div>
 
-
-            <h2 id="origTitle">DASHBOARD</h2>
-            <h2 id="searchTitle" class="d-none">SEARCH RESULTS</h2>
+            <h2>Dashboard</h2>
             <div class="row">
               <div class="col d-flex offset-4 justify-content-center">
                 <div id="search">
@@ -136,19 +134,19 @@
               <div class="col">
                 <div class="row">
                   <div class="col d-flex">
-                    <input type="checkbox" id="titleCheckbox" value="true" name="titleCheckbox"/>
+                    <input type="checkbox" id="titleCheckbox" />
                     <span class="text-muted small mb-0">Title</span>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col d-flex">
-                    <input type="checkbox" id="subtitleCheckbox" value="true" name="subtitleCheckbox"/>
+                    <input type="checkbox" id="subtitleCheckbox" />
                     <small class="text-muted">Subtitle</small>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col d-flex">
-                    <input type="checkbox" id="txtCheckbox" value="true" name="txtCheckbox/>
+                    <input type="checkbox" id="bodyCheckbox" />
                     <span class="text-muted small">Body</span>
                   </div>
                 </div>
@@ -167,12 +165,9 @@
             >
               No articles found for your search term(s).
             </div>
-
-            <!-- not sure if doing this here -->
             <div><% include('./textversion.ejs') %></div>
 
-            <div id="searchResultList"></div>
-          </div> <!-- end div.searchResults -->
+          </div>
 
           <div class="row" id="theArticles">
             <% if(!articles) console.log("NO ARTICLES 89");
@@ -192,8 +187,8 @@
                 </a>
                 <div class="card-body">
                   <h4 class="mb-0">
-                    <a href="<%- myUrl %>"><%= curr.title %></a>
-                    <!-- I dunno how this ended up here <span id="searchTitle"><%= curr.title %></span> -->
+                    <a id="origTitle" href="<%- myUrl %>"><%= curr.title %></a>
+                    <span id="searchTitle">SEARCH RESULTS</span>
                   </h4>
                   <p class="mb-0 text-muted"><%= createdAt %></p>
                   <h6 class="card-text"><%= curr.subtitle %></h6>
@@ -223,23 +218,23 @@
       const noArticlesAlert = document.getElementById("noArticlesAlert");
       const articleCards = document.getElementsByClassName("articleCard");
       const deleteFailedAlert = document.getElementById("deleteFailedAlert");
-      const articleDeletedAlert = document.getElementById("articleDeletedAlert");
+      const articleDeletedAlert = document.getElementById(
+        "articleDeletedAlert"
+      );
 
-      const queryString = window.location.search; // the URL query ?string
+      const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
+
       console.log("articleCards.length: " + articleCards.length);
-      
-      // Show "You have no articles yet"
       if (articleCards.length === 0) {
         noArticlesAlert.classList.remove("d-none");
         noArticlesAlert.classList.add("d-block");
       }
-      // Show "Article deleted successfully"
+
       if (urlParams.get("deleteSuccess") === "true") {
         articleDeletedAlert.classList.remove("d-none");
         articleDeletedAlert.classList.add("d-block");
-      } 
-      // Show "Failed to delete article"
+      }
       if (urlParams.get("deleteFailed") === "true") {
         deleteFailedAlert.classList.remove("d-none");
         deleteFailedAlert.classList.add("d-block");
@@ -247,95 +242,80 @@
 
       // SEARCH
       const searchBox = document.getElementById("searchBox");
-      const searchResults = document.getElementById("searchResults"); // div with search results 
-      const theArticles = document.getElementById("theArticles"); // The div with dashboard cards
+      const searchResults = document.getElementById("searchResults");
+      const theArticles = document.getElementById("theArticles");
       const noSearchResAlert = document.getElementById('noSearchResAlert');
-      const searchTitle = document.getElementById('searchTitle');  // "SEARCH RESULTS" in header
-      const origTitle = document.getElementById('origTitle'); // "DASHBOARD" in header
-
-      const titleCheckbox = document.getElementById('titleCheckbox');
-      const subtitleCheckbox = document.getElementById('subtitleCheckbox');
-      const txtCheckbox = document.getElementById('txtCheckbox');
-
+      const searchTitle = document.getElementById('searchTitle');
+      const origTitle = document.getElementById('origTitle');
 
       searchBox.addEventListener("input", function searchChange() {
         console.log("onchange search with val: " + searchBox.value);
 
-        // If search box is clear, just show the dashboard stuff
         if (searchBox.value === "") {
-          theArticles.classList.remove("d-none"); // Show the regular dashboard list of cards
+          theArticles.classList.remove("d-none"); // Show the regular dashboard 
           searchResults.classList.add("d-none"); // Hide the search results 
           origTitle.classList.remove('d-none'); // Show "DASHBOARD" in header
           searchTitle.classList.add('d-none'); // Hide "SEARCH RESULTS" in header
-        }
 
-        // Else let's populate the search results 
-        else if(searchBox.value !== "" && 
-          (titleCheckbox.value === "true" || 
-          subtitleCheckbox.value === "true" || 
-          txtCheckbox.value === "true")) {
+        } else {
             origTitle.classList.add('d-none'); // Remove "DASHBOARD" from header
-            searchTitle.classList.remove('d-none'); // Display "SEARCH RESULTS" in header
-            theArticles.classList.add('d-none');
-            searchResults.classList.remove('d-none');
+            searchTitle.classList.add('d-none'); // Display "SEARCH RESULTS" in header
 
-            var origArr = <%- JSON.stringify(articles) %>;
-            
-            let searchResArts = doSearch(origArr, searchBox.value, titleCheckbox.value, subtitleCheckbox.value, txtCheckbox.value );
-            console.log(searchResArts);
+            var originalArr = [];
+            var newArr = [];
+
+            const titleCheckbox = document.getElementById('titleCheckbox');
+            const subtitleCheckbox = document.getElementById('subtitleCheckbox');
+            const bodyCheckbox = document.getElementById('bodyCheckbox');
+
+            // populate originalArr with articles
+            for (var i=0, len = articles.length; i<len; i++) {
+                originalArr.push(<%- JSON.stringify(articles[i]) %>);
+            }
+
+                console.log("276 originalArr");
+                console.log(originalArr);
+
+            let searchTerms = searchBox.value.split(" ");
+            console.log(searchTerms);
+        
+            originalArr.forEach(curr => {
+                searchTerms.forEach(term){
+                    if(curr.title.includes(term))
+                }
+                if(titleCheckbox.checked === true){
+                    let title = curr.title;
+                    
+                }
+                
+                
+
+                title = title.toLowerCase();
+                value = value.toLowerCase();
+
+                console.log("typeof title: " + typeof title);
+                if(title.includes(value)){
+                    newArr.push(curr);
+                }
+            });
+
+            if(newArr.length === 0){
+                noSearchResAlert.classList.remove('d-none');
+                //noSearchResAlert.classList.add('d-block');
+            ////////////////////////////////////////////////////////
+            }
+            else{
+                searchResults.classList.remove('d-none');
+
+            }
+
+            console.log("newArr 235: ");
+            console.log(newArr);
+          theArticles.classList.add("d-none");
+          searchResults.classList.remove("d-none");
 
         }
-      }); // end searchBox addEventListener
-
-function doSearch(articles, searchField, doTitle, doSubtitle, doText, reverse){
-    
-    let newArr = []; // rv
-    let searchTerms = [];
-
-    searchField.trim().split(" ").forEach(curr => {
-        if(curr !== " "){
-            searchTerms.push(curr);
-        }
-    });
-    console.log("search terms: ");
-    console.log(searchTerms);
-
-    if(doTitle.value == "true"){
-        searchTerms.forEach(term => {
-            articles.forEach(article => {
-                if(article.title.includes(term) && article.alreadyAdded != true){
-                    newArr.push(article);
-                    article.alreadyAdded = true;
-                }
-            });
-        });
-    }
-
-    if(doSubtitle.value == "true"){
-        searchTerms.forEach(term => {
-            articles.forEach(article => {
-                if(article.subtitle.includes(term) && article.alreadyAdded != true){
-                    newArr.push(article);
-                    article.alreadyAdded = true;
-                }
-            });
-        });
-    }
-
-    if(doText.value == "true"){
-        searchTerms.forEach(term => {
-            articles.forEach(article => {
-                if(article.txt.includes(term) && article.alreadyAdded != true){
-                    newArr.push(article);
-                    article.alreadyAdded = true;
-                }
-            });
-        });
-    }
-
-    return newArr;
-} // end doSearch()
-
+      });
     </script>
     <!-- <script src="/js/textversion.js"></script> -->
 

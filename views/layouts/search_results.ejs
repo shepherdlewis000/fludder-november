@@ -1,0 +1,49 @@
+<% 
+if(!articles){ 
+    console.log("NO ARTICLES 89"); 
+}
+
+// include .//functions 
+
+include('../../static/js/textversion.js');
+
+
+const textStyle = {
+    headingStyle: "hashify",
+    uIndentationChar: " ",
+    oIndentationChar: " ",
+};
+
+articles.forEach(curr => { 
+    let createdAt = new Date(curr.createdAt.toDateString()); 
+    createdAt = createdAt.toString().split(" ").splice(0, 4).join(" "); 
+    let myUrl ="http://" + host + "/article/" + curr._id; 
+    let theText = htmlToPlainText(curr.txt, textStyle); ////////////////////////////////  PROBLEM HERE
+    if(theText.length > 200){
+        theText = theText.slice(0, 199) + "...(more)";
+    }
+    curr.txt = theText;
+    
+%>
+
+<div class="item">
+    <div class="row border-bottom">
+        <div class="col-md-9">
+            <h3><a href="<%= myUrl %>"><%= curr.title %></a></h3>
+            <h4 class="organization"><%= curr.subtitle %></h4>
+            <span class="period align-top"><%= createdAt %></span>
+
+            <!-- <p class="text-muted"><%= curr.txt %></p> -->
+            <pre id="html-output" class="text-muted"><%= curr.txt %></pre>
+        </div>
+        <div class="col-md-3">
+            <!--<span class="period text-center"><%= createdAt %></span>-->
+            <a href="<%- myUrl %>">
+                <img class="mb-3 artImage d-block img-shrunk img-fluid float-right scale-on-hover" src="<%- curr.link %>"/>
+            </a>
+        </div>
+    </div> <!-- end row -->
+    <!-- <p class="text-muted"><%= curr.txt %></p> -->
+</div> <!-- end div.item -->
+
+<% }); %>

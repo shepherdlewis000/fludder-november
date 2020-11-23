@@ -289,37 +289,6 @@ app.get("/articlejs/:articleId", function (req, res, next) {
   })();
 });
 
-/* CHANGING TO USE PELL
-app.get("/edit_article/:articleId", (req, res, next) => {
-  if (!req.user) {
-    res.redirect("/");
-    return next();
-  }
-  console.log("Entered edit_article route. req.user.id is: " + req.user.id);
-
-  const articleId = req.params.articleId;
-
-  (async function findAndAttach() {
-    const article = await Article.find({
-      author: req.user._id,
-      _id: articleId,
-    });
-
-    let createdAt = new Date(article[0].createdAt.toDateString());
-    console.log(createdAt);
-    let createdAt2 = createdAt.toString().split(" ").splice(0, 4).join(" ");
-    console.log(createdAt2);
-
-    res.render("index", {
-      layout: "edit_article",
-      user: req.user,
-      article: article[0],
-      createdAt: createdAt2,
-      fullname: req.user.fullname,
-    });
-  })(); // end async function findAndAttach
-});
-*/
 
 app.get("/edit_article/:articleId", (req, res, next) => {
   if (!req.user) {
