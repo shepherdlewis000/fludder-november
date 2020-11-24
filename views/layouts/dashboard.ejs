@@ -136,7 +136,7 @@
             <h2 id="origTitle">DASHBOARD</h2>
             <h2 id="searchTitle" class="d-none">SEARCH RESULTS</h2>
             <div class="row">
-              <form class="pt-0 pb-0" style="box-shadow: none">
+              <form class="pt-0 pb-0" id="form1" style="box-shadow: none" action="#">
                 <div class="row">
                     <div class="col"></div>
                     <!-- <div class="col-lg-4 col-md-5 col-sm-7">  removing to see if spacing issues will fix-->
@@ -263,6 +263,9 @@
       }
 
       // SEARCH
+      const form1 = document.getElementById('form1');
+      form1.addEventListener('submit', e => e.preventDefault());
+
       const searchBox = document.getElementById("searchBox");
       const searchResults = document.getElementById("searchResults"); // div with search results 
       const theArticles = document.getElementById("theArticles"); // The div with dashboard cards
