@@ -35,22 +35,6 @@
     <link rel="stylesheet" href="/css/Login-Form-Dark.css" />
     <!-- <link rel="stylesheet" href="/css/Profile-Edit-Form-1.css"> -->
     <link rel="stylesheet" href="/css/Profile-Edit-Form.css" />
-    <style>
-      #html-output {
-        white-space: pre-wrap;
-      }
-      @media screen and (min-size: 768px) {
-        .artImage {
-          float: right;
-        }
-      }
-      @media screen and (max-size: 767px) {
-        .artImage {
-          /* A fake rule to not get warning- revisit later */
-          background-color: paleturquoise;
-        }
-      }
-    </style>
   </head>
 
   <body>
@@ -90,7 +74,7 @@
               id="noArticlesAlert"
               class="d-none alert alert-secondary w-100 fade show mt-4"
               role="alert"
-            > <!-- end div.noArticlesAlert -->
+            >
               You have no articles. Use the menu above to add your first!
               <button
                 type="button"
@@ -105,7 +89,7 @@
               id="articleDeletedAlert"
               class="d-none alert alert-secondary w-100 fade show mt-4"
               role="alert"
-            > <!-- end div.articleDeletedAlert -->
+            >
               Article deleted successfully.
               <button
                 type="button"
@@ -136,38 +120,42 @@
             <h2 id="origTitle">DASHBOARD</h2>
             <h2 id="searchTitle" class="d-none">SEARCH RESULTS</h2>
             <div class="row">
-              <form>
+              <div class="col d-flex offset-4 justify-content-center">
+                <div id="search">
+                  <input
+                    type="text"
+                    id="searchBox"
+                    placeholder="Search.."
+                    name="searchBox"
+                  />
+                  <!-- <button type="submit"><i class="fa fa-search"></i></button> -->
+                </div>
+              </div>
+              <!-- end col -->
+              <!-- the Checkboxes-->
+              <div class="col">
                 <div class="row">
-                    <div class="col"></div>
-                    <div class="col-lg-4 col-md-5 col-sm-7">
-                        <div class="mt-5 mb-2 form-group">
-                            <label class="sr-only" for="searchBox">Search</label>
-                            <input type="text" class="form-control" id="searchBox" name="searchBox" placeholder="Search...">
-                        </div>
-                    </div>
-                    <div class="col"></div>
+                  <div class="col d-flex">
+                    <input type="checkbox" id="titleCheckbox" value="true" name="titleCheckbox"/>
+                    <span class="text-muted small mb-0">Title</span>
+                  </div>
                 </div>
                 <div class="row">
-                    <div class="col"></div>
-                    <div class="col-lg-4 col-md-5 col-sm-7 d-flex justify-content-center">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="titleCheckbox" value="true">
-                            <label class="form-check-label small text-muted" for="titleCheckbox">Title</label>
-                        </div>
-                    
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="subtitleCheckbox" value="true">
-                            <label class="form-check-label small text-muted" for="subtitleCheckbox">Subtitle</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="txtCheckbox" value="true">
-                            <label class="form-check-label small text-muted" for="txtCheckbox">Body</label>
-                        </div>
-                    </div>
-                    <div class="col"></div>
-                </div> <!-- end row -->
-              </form>
-            </div> <!-- end row -->
+                  <div class="col d-flex">
+                    <input type="checkbox" id="subtitleCheckbox" value="true" name="subtitleCheckbox"/>
+                    <small class="text-muted">Subtitle</small>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col d-flex">
+                    <input type="checkbox" id="txtCheckbox" value="true" name="txtCheckbox/>
+                    <span class="text-muted small">Body</span>
+                  </div>
+                </div>
+              </div>
+              <!-- end col -->
+            </div>
+            <!-- end row -->
           </div>
           <!-- end heading -->
 
@@ -181,42 +169,39 @@
             </div>
 
             <!-- not sure if doing this here -->
-            <!-- 
             <div><% include('./textversion.ejs') %></div>
-            -->
+
             <div id="searchResultList"></div>
           </div> <!-- end div.searchResults -->
 
           <div class="row" id="theArticles">
-            <div class="row" id="theArticles">
-              <% if(!articles) console.log("NO ARTICLES 89");
-              articles.forEach(curr => { let createdAt = new
-              Date(curr.createdAt.toDateString()); createdAt =
-              createdAt.toString().split(" ").splice(0, 4).join(" "); let myUrl =
-              "http://" + host + "/article/" + curr._id; %>
-  
-              <div class="col-md-6 col-lg-4 originalArticle">
-                <div class="card articleCard border-0">
-                  <a href="<%- myUrl %>">
-                    <img
-                      class="card-img-top scale-on-hover"
-                      src="<%- curr.link %>"
-                      alt="Card Image"
-                    />
-                  </a>
-                  <div class="card-body">
-                    <h4 class="mb-0">
-                      <a href="<%- myUrl %>"><%= curr.title %></a>
-                      <!-- I dunno how this ended up here <span id="searchTitle"><%= curr.title %></span> -->
-                    </h4>
-                    <p class="mb-0 text-muted"><%= createdAt %></p>
-                    <h6 class="card-text"><%= curr.subtitle %></h6>
-                  </div>
+            <% if(!articles) console.log("NO ARTICLES 89");
+            articles.forEach(curr => { let createdAt = new
+            Date(curr.createdAt.toDateString()); createdAt =
+            createdAt.toString().split(" ").splice(0, 4).join(" "); let myUrl =
+            "http://" + host + "/article/" + curr._id; %>
+
+            <div class="col-md-6 col-lg-4 originalArticle">
+              <div class="card articleCard border-0">
+                <a href="<%- myUrl %>">
+                  <img
+                    class="card-img-top scale-on-hover"
+                    src="<%- curr.link %>"
+                    alt="Card Image"
+                  />
+                </a>
+                <div class="card-body">
+                  <h4 class="mb-0">
+                    <a href="<%- myUrl %>"><%= curr.title %></a>
+                    <!-- I dunno how this ended up here <span id="searchTitle"><%= curr.title %></span> -->
+                  </h4>
+                  <p class="mb-0 text-muted"><%= createdAt %></p>
+                  <h6 class="card-text"><%= curr.subtitle %></h6>
                 </div>
               </div>
-              <% }); %>
             </div>
-            
+            <% }); %>
+          </div>
           <!-- end row theArticles -->
         </div>
         <!-- end container-->
@@ -242,7 +227,6 @@
 
       const queryString = window.location.search; // the URL query ?string
       const urlParams = new URLSearchParams(queryString);
-
       console.log("articleCards.length: " + articleCards.length);
       
       // Show "You have no articles yet"
@@ -274,17 +258,18 @@
       const txtCheckbox = document.getElementById('txtCheckbox');
 
 
-      searchBox.addEventListener("input", searchChange); // end searchBox addEventListener
-      titleCheckbox.addEventListener('change', searchChange);
-      subtitleCheckbox.addEventListener('change', searchChange);
+      searchBox.addEventListener("input", searchChange); 
+      // end searchBox addEventListener
+
+      titleCheckbox.addEventListener("change", searchChange);
+      subtitleCheckbox.addEventListener("change",searchChange);
       txtCheckbox.addEventListener('change', searchChange);
 
       function searchChange() {
-        console.log("onchange search with val: " + searchBox.value);
+        console.log("265 onchange search with val: " + searchBox.value);
 
-        // If search box is clear or all checkboxes unchecked, just show the dashboard stuff
-        if (searchBox.value === "" || (!titleCheckbox.checked && !subtitleCheckbox.checked && !txtCheckbox.checked)) {
-          console.log("entered if empty searchbox or all unchecked 290");
+        // If search box is clear, just show the dashboard stuff
+        if (searchBox.value === "") {
           theArticles.classList.remove("d-none"); // Show the regular dashboard list of cards
           searchResults.classList.add("d-none"); // Hide the search results 
           origTitle.classList.remove('d-none'); // Show "DASHBOARD" in header
@@ -297,6 +282,7 @@
           subtitleCheckbox.checked || 
           txtCheckbox.checked)) {
             console.log('entered else if... 277')
+            
             origTitle.classList.add('d-none'); // Remove "DASHBOARD" from header
             searchTitle.classList.remove('d-none'); // Display "SEARCH RESULTS" in header
             theArticles.classList.add('d-none');
@@ -304,119 +290,54 @@
 
             var origArr = <%- JSON.stringify(articles) %>;
             
-            let searchResArts = doSearch(origArr, searchBox.value, titleCheckbox.checked, subtitleCheckbox.checked, txtCheckbox.checked );
-            let searchResHtml = "";
-            
-            console.log('312 searchResArts: ');
+            let searchResArts = doSearch(origArr, searchBox.value, titleCheckbox.checked, 
+                subtitleCheckbox.checked, txtCheckbox.checked );
             console.log(searchResArts);
 
-            // textStyle for htmlOutput 
-            const textStyle = {
-              headingStyle: "hashify",
-              uIndentationChar: " ",
-              oIndentationChar: " ",
-            };
-
-            searchResArts.forEach(curr => {
-              //console.log('301 curr.createdAt: ' + curr.createdAt); // ok 2020-11-17T06:28:34.541Z
-              let createdAt = new Date(curr.createdAt);
-              //let createdAt = new Date(curr.createdAt.toDateString());
-              createdAt = createdAt.toString().split(' ').splice(0,4).join(' ');
-              let myUrl = 'http://' + location.hostname + '/article/' + curr._id;
-              
-              let theText = htmlToPlainText(curr.txt, textStyle);
-              if (theText.length > 200) {
-                theText = theText.slice(0, 199) + `...(more)`;
-              }
-              curr.txt = theText;
-/////////////////
-              searchResHtml += `
-              <div class="item">
-                <div class="row border-bottom">
-                  <div class="col-md-6">
-                    <h3><a href=${myUrl}>${curr.title}</a></h3>
-                    <h4 class="organization">${curr.subtitle}</h4>
-                    <span class="period align-top">${createdAt}</span>
-                    <pre id="html-output" class="text-muted">${curr.txt}</pre>
-                  </div>
-                  <div class="col-md-6">
-                    <a href=${myUrl}>
-                      <img 
-                        class="mb-3 artImage d-block img-shrunk img-fluid float-right scale-on-hover"
-                        src=${curr.link}
-                      />
-                    </a>
-                  </div>
-                </div>
-              </div>`;
-
-              searchResults.innerHTML = searchResHtml;
-            })
-
         }
-      } // end function searchChange
 
 function doSearch(articles, searchField, doTitle, doSubtitle, doText, reverse){
     console.log("entered doSearch 292");
     let newArr = []; // rv
     let searchTerms = [];
 
+    console.log("302 doTitle is: " + doTitle);
+
     searchField.trim().split(" ").forEach(curr => {
         if(curr !== " "){
             searchTerms.push(curr);
         }
     });
-
     console.log("search terms: ");
     console.log(searchTerms);
 
-    if(doTitle){
-      console.log("entered 305 doTitle");
+    if(doTitle.checked){
+      console.log("entered doTitle == true 305");
         searchTerms.forEach(term => {
             articles.forEach(article => {
-              let someText = htmlToPlainText(article.title);
-              console.log('term: 367: ' + term);
-              if(someText.toLowerCase().includes(term.toLowerCase()) && article.alreadyAdded !== true){
-                console.log('370 someText: ' + someText);
-                newArr.push(article);
-                article.alreadyAdded = true;
-              }
-              /*
                 if(article.title.includes(term) && article.alreadyAdded != true){
                     newArr.push(article);
                     article.alreadyAdded = true;
                 }
-                */
             });
         });
     }
 
-    if(doSubtitle){
-      console.log("doSubtitle is: " + doSubtitle);
-      
+    if(doSubtitle.value == "true"){
         searchTerms.forEach(term => {
             articles.forEach(article => {
-              // Below was including the html content in the search
-                /*
                 if(article.subtitle.includes(term) && article.alreadyAdded != true){
                     newArr.push(article);
                     article.alreadyAdded = true;
                 }
-                */
-               let someText = htmlToPlainText(article.subtitle);
-               if(someText.toLowerCase().includes(term.toLowerCase()) && article.alreadyAdded !== true){
-                 console.log("387 someText: " + someText);
-                 newArr.push(article); 
-                 article.alreadyAdded = true;
-               }
             });
         });
     }
 
-    if(doText){
+    if(doText.value == "true"){
         searchTerms.forEach(term => {
             articles.forEach(article => {
-                if(article.txt.toLowerCase().includes(term.toLowerCase()) && article.alreadyAdded != true){
+                if(article.txt.includes(term) && article.alreadyAdded != true){
                     newArr.push(article);
                     article.alreadyAdded = true;
                 }
@@ -428,10 +349,9 @@ function doSearch(articles, searchField, doTitle, doSubtitle, doText, reverse){
 } // end doSearch()
 
     </script>
-    <script src="/js/textversion.js"></script>
+    <!-- <script src="/js/textversion.js"></script> -->
 
   </body>
-
 </html>
 
 <% } %>

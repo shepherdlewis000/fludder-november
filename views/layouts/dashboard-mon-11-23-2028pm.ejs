@@ -136,38 +136,42 @@
             <h2 id="origTitle">DASHBOARD</h2>
             <h2 id="searchTitle" class="d-none">SEARCH RESULTS</h2>
             <div class="row">
-              <form>
+              <div class="col d-flex offset-4 justify-content-center">
+                <div id="search">
+                  <input
+                    type="text"
+                    id="searchBox"
+                    placeholder="Search.."
+                    name="searchBox"
+                  />
+                  <!-- <button type="submit"><i class="fa fa-search"></i></button> -->
+                </div>
+              </div>
+              <!-- end col -->
+              <!-- the Checkboxes-->
+              <div class="col">
                 <div class="row">
-                    <div class="col"></div>
-                    <div class="col-lg-4 col-md-5 col-sm-7">
-                        <div class="mt-5 mb-2 form-group">
-                            <label class="sr-only" for="searchBox">Search</label>
-                            <input type="text" class="form-control" id="searchBox" name="searchBox" placeholder="Search...">
-                        </div>
-                    </div>
-                    <div class="col"></div>
+                  <div class="col d-flex">
+                    <input type="checkbox" id="titleCheckbox" value="true" name="titleCheckbox"/>
+                    <span class="text-muted small mb-0">Title</span>
+                  </div>
                 </div>
                 <div class="row">
-                    <div class="col"></div>
-                    <div class="col-lg-4 col-md-5 col-sm-7 d-flex justify-content-center">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="titleCheckbox" value="true">
-                            <label class="form-check-label small text-muted" for="titleCheckbox">Title</label>
-                        </div>
-                    
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="subtitleCheckbox" value="true">
-                            <label class="form-check-label small text-muted" for="subtitleCheckbox">Subtitle</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="txtCheckbox" value="true">
-                            <label class="form-check-label small text-muted" for="txtCheckbox">Body</label>
-                        </div>
-                    </div>
-                    <div class="col"></div>
-                </div> <!-- end row -->
-              </form>
-            </div> <!-- end row -->
+                  <div class="col d-flex">
+                    <input type="checkbox" id="subtitleCheckbox" value="true" name="subtitleCheckbox"/>
+                    <span class="text-muted small">Subtitle</small>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col d-flex">
+                    <input type="checkbox" id="txtCheckbox" value="true" name="txtCheckbox"/>
+                    <span class="text-muted small">Body</span>
+                  </div>
+                </div>
+              </div>
+              <!-- end col -->
+            </div>
+            <!-- end row -->
           </div>
           <!-- end heading -->
 
