@@ -1,7 +1,7 @@
 {
   "name": "fludder",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple personal note-taking app done in Node/Express. An exercise in user authentication and data persistance using cloud and MongoDB",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
