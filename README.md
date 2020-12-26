@@ -96,3 +96,6 @@ _Other_
 
   - [Flutter Web Support](https://flutter.dev/web)
   - [Flutter Desktop Support](https://flutter.dev/desktop)
+
+- edit: working on map integration
+
