@@ -1,4 +1,4 @@
-const { resolveInclude } = require("ejs");
+// const { resolveInclude } = require("ejs");
 
 // Access to the .env variables
 require("dotenv").config();

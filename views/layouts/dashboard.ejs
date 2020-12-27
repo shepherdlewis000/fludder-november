@@ -143,7 +143,10 @@
                       <div>
                         <div class="mt-2 mb-2 form-group">
                             <label class="sr-only" for="searchBox">Search</label>
-                            <input type="text" class="form-control" id="searchBox" name="searchBox" placeholder="Search...">
+                            <input type="text" class="form-control" id="searchBox" name="searchBox" placeholder="Search..." data-placement="right" title="Enter text to find & check one or more boxes below for search type.">
+                            <!--
+                              <input class="form-control" id="inputTestID" name="inputTest" placeholder="Test" type="text" data-placement="bottom" title="Tooltip Text">
+                            -->
                         </div>
                     </div>
                     <div class="col"></div>
@@ -232,10 +235,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="/js/bs-init.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script> -->
     <script src="/js/Profile-Edit-Form.js"></script>
     <script src="/js/theme.js"></script>
     <script>
+      // Setup the tooltip for the search text input that reminds user to check 1+ box(es)      
+      $(document).ready(function(){
+        $('#searchBox').tooltip();
+      });
+
+      // handle back button which otherwise would leave search box filled
+      $(window).bind("pageshow", function() {
+        var form = $('form'); 
+        // let the browser natively reset defaults
+        form[0].reset();
+      });
+
       const noArticlesAlert = document.getElementById("noArticlesAlert");
       const articleCards = document.getElementsByClassName("articleCard");
       const deleteFailedAlert = document.getElementById("deleteFailedAlert");
@@ -321,19 +335,25 @@
               oIndentationChar: " ",
             };
 
+            if(searchResArts.length === 0){
+              searchResults.innerHTML = "<h4>No search results</h4>";
+            }
             searchResArts.forEach(curr => {
               //console.log('301 curr.createdAt: ' + curr.createdAt); // ok 2020-11-17T06:28:34.541Z
               let createdAt = new Date(curr.createdAt);
               //let createdAt = new Date(curr.createdAt.toDateString());
               createdAt = createdAt.toString().split(' ').splice(0,4).join(' ');
-              let myUrl = 'http://' + location.hostname + '/article/' + curr._id;
+              // old broken
+              //let myUrl = 'http://' + location.hostname + '/article/' + curr._id;
+              let myUrl = "article/" + curr._id;
+              // suggested via chingu discord
               
               let theText = htmlToPlainText(curr.txt, textStyle);
               if (theText.length > 200) {
                 theText = theText.slice(0, 199) + `...(more)`;
               }
               curr.txt = theText;
-/////////////////
+
               searchResHtml += `
               <div class="item">
                 <div class="row border-bottom">

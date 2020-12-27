@@ -89,6 +89,8 @@ var coll = conn.collection("articles");
 coll.createIndex({});
 */
 
+//////////////////////////////////// HERE FOR SIGINT 
+
 // using ejs for rendering
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
@@ -579,6 +581,14 @@ app.use(express.static(__dirname + "/static"));
 
 const server = app.listen(port, function () {
   console.log("passport-local demo up on port: " + port);
+});
+
+// Gracefully exit on SIGINT - still my terminal not sending SIGINT
+// on Ctrl-C, maybe due to reassigned shortcut for copy?
+process.on('SIGTERM', () => {
+  server.close(() => {
+    console.log("SIGINT rec'd. Process terminated")
+  })
 });
 
 // HELPER FUNCTIONS
