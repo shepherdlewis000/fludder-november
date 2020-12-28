@@ -150,7 +150,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: sessionStore,
-    cookie: { maxAge: 16000000 },
+    cookie: { maxAge: 16000000, sameSite: true },
   })
 );
 app.use(passport.initialize());
@@ -291,7 +291,9 @@ app.get("/articlejs/:articleId", function (req, res, next) {
   })();
 });
 
-
+// edit_article/:articleId is route for edit of article
+// Initial load of editable article. uses edit_pell2 layout
+// edit_article (without articleId) processes deletes and saves.
 app.get("/edit_article/:articleId", (req, res, next) => {
   if (!req.user) {
     res.redirect("/");
