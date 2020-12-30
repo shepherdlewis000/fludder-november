@@ -25,10 +25,6 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
     />
-    <!-- <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"
-    /> -->
     <link rel="stylesheet" href="/css/Login-Form-Dark.css" />
     <!-- <link rel="stylesheet" href="/css/Profile-Edit-Form-1.css" /> -->
     <link rel="stylesheet" href="/css/Profile-Edit-Form.css" />
@@ -70,22 +66,16 @@
       <section class="portfolio-block project">
         <div class="container">
           <div class="heading">
-            <!-- Can mess around later and see if badge is better INSIDE h2-->
-            <!-- <h2 class="d-inline"><%= article.title %></h2>
-            <a href="/edit_article/<%- article.id %>">
-              <span class="badge badge-primary float-right mr-4">Edit</span>
-            </a>
-            -->
             <h2 id="titleHeading" class="d-inline">
               <%= article.title %>
             </h2>
             <a href="/edit_article/<%= article.id %>">
-              <span class="badge badge-primary ml-2" style="vertical-align: super;">Edit article</span>
+              <span class="badge badge-primary ml-5 mt-1" style="vertical-align: super;">EDIT</span>
             </a>
           </div>
           
           <div
-            id="artImage" class="text-center"
+            id="artImage" class="text-center mb-5"
           ><a href="<%- article.link %>"><img class='d-inline-block img-fluid mb-6' src="<%- article.link %>"></a>
         </div>
           <!-- removed from div class='image' -->
@@ -93,33 +83,26 @@
           
           <div class="row">
             <div class="col-12 col-md-12 col-lg-10 offset-lg-1 offset-xl-1 info">
-              <h3><%= article.subtitle %></h3>
-              <h4><%= createdAt %></h4>
-              <h4>By <%= user.fullname %></h4> <!-- FIX -->
-              <div><%- article.txt %></div>
+              <h3 class="mb-2"><%= article.subtitle %></h3>
+              <h5 class="mb-0"><%= createdAt %></h5>
+              <h6>By <%= user.fullname %></h6> <!-- FIX -->
+              <div class="mt-4"><%- article.txt %></div>
             </div>
           </div>
-          <!-- more-projects will give a row at the bottom to fill if want to -->
-          <!-- <div class="more-projects"></div> -->
+     
         </div>
       </section>
     </main>
     <footer class="page-footer">
       <div class="container">
         <div class="links"><a href="/about">About</a></div>
-        <div class="social-icons"></div>
+      
       </div>
     </footer>
-    <!--
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    -->
+    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script> -->
     <script src="/js/Profile-Edit-Form.js"></script>
-    <script src="/js/theme.js"></script>
   </body>
 </html>
 

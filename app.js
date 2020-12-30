@@ -22,9 +22,6 @@ const { Server } = require("http");
 // Access to the .env variables
 require("dotenv").config();
 
-//////////// TEST CLOUD
-//console.log("from app.js cloudurl: " + cloud.testCloudinary());
-////////////// TESTING CLOUD END
 // CLOUDINARY CONFIG
 const cloudinary = require("cloudinary").v2;
 
@@ -83,14 +80,6 @@ const ArticleSchema = new mongoose.Schema({
 });
 const Article = connection.model("Article", ArticleSchema);
 
-// Setup index for text search//////////////////////////////////////////////// SEARCH
-/*
-var coll = conn.collection("articles");
-coll.createIndex({});
-*/
-
-//////////////////////////////////// HERE FOR SIGINT 
-
 // using ejs for rendering
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
@@ -113,9 +102,7 @@ const locStr = new LocalStrategy(function verifyFunction(
         return cb(null, false);
       }
 
-      // Function defined at bottom?
       const isValid = validPassword(password, user.hash, user.salt);
-
       if (isValid) {
         return cb(null, user);
       } else {
@@ -186,32 +173,7 @@ app.get(
     });
   }
 );
-/*
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    // redirect back to /login if login fails
-    successRedirect: "/dashboard?welcome=true",
-    failureRedirect: "/login?failedLogin=true",
-  })
-);
 
-////////////////////////////////////////////////
-console.log("198 still got here after login");
-// in dashboard, if welcome=true, increment loginCount in user
-// end up at / if login works
-*/
-/* function doLogin(req, res) {
-      console.log("req.user: " + req.user);
-      //req.user.loginCount += 1;
-      //req.user.save();
-
-      res.redirect(
-        `/dashboard/?welcome=true&loginCount=${req.user.loginCount}`
-      );
-      // MORE WORK TO DO WITH ABOVE AND DASHBOARD
-    }
-  ) */
 app.post("/login", function doLogin(req, res, next) {
   passport.authenticate("local", function (err, user, info) {
     if (err) {
@@ -229,7 +191,6 @@ app.post("/login", function doLogin(req, res, next) {
       }
       req.user.loginCount = req.user.loginCount + 1;
       let result = await req.user.save();
-      //console.log("230 Result from req.user.save: " + result);
 
       console.log(
         "230 req.user.loginCount after increment: " + req.user.loginCount
@@ -266,7 +227,7 @@ function authMiddle(req, res, next) {
         console.log("authMiddle 341 err: " + err);
         return next(err);
       }
-      console.log("leaving authMiddle and calling next");
+      
       return next();
     });
   });
@@ -370,7 +331,6 @@ app.get("/all_articles", function (req, res, next) {
     return next();
   }
   console.log("entered route all_articles");
-  //console.log("all_articles req.user._id: " + req.user._id); //GOOD
 
   (async function findAndForward() {
     const articles = await Article.find({
@@ -385,7 +345,6 @@ app.get("/all_articles", function (req, res, next) {
 
     // console.dir(articles); // an array
     articles.forEach((curr) => {
-      //curr.txt = stripHtmlEtc(curr.txt).slice(0, 50);
 
       let theText = textVersion(curr.txt, textStyle);
       if (theText.length > 200) {
@@ -409,16 +368,11 @@ app.get("/dashboard", function (req, res, next) {
     res.redirect("/");
     return next();
   }
-  //console.log("entered route all_articles");
-  console.log("dashboard req.user._id: " + req.user._id); //GOOD
 
   (async function findAndForward() {
     const articles = await Article.find({
       author: req.user._id,
     });
-
-    //console.log("279:");
-    //console.log(articles); // good
 
     res.render("index", {
       layout: "dashboard",
@@ -429,7 +383,7 @@ app.get("/dashboard", function (req, res, next) {
     });
   })();
 });
-// this should be a mistake (only POST requests allowed to posted route)
+// only POST requests allowed to posted route)
 app.get("/posted", function (req, res) {
   res.redirect("/dashboard");
 });
@@ -439,7 +393,6 @@ app.post("/edit_article/:articleId", (req, res, next) => {
     res.redirect("/");
     return next();
   }
-  console.log("post route to edit_article entered");
 
   const articleId = req.params.articleId;
   const { title, subtitle, txt, deleteArticle } = req.body;
@@ -457,7 +410,7 @@ app.post("/edit_article/:articleId", (req, res, next) => {
       console.log("entered if 430");
       await Article.deleteOne({ _id: articleId }, function (err) {
         if (err) {
-          console.log("error deleting article 437");
+          console.log("error deleting article");
           return res.redirect("/dashboard?deleteFailed=true"); // set alert of failure
         }
         console.log("Forwarding to dashboard with deleteSuccess=true param");
@@ -465,7 +418,7 @@ app.post("/edit_article/:articleId", (req, res, next) => {
       });
     } // end if deleteArticle
     else {
-      console.log("446 shouldnt be here if deleting");
+      // Shouldn't get here if deleting
       doc.title = title;
       doc.subtitle = subtitle;
       doc.txt = txt.trim();
@@ -481,17 +434,6 @@ app.post("/edit_article/:articleId", (req, res, next) => {
       // trouble here.. was trying to just reuse article route
       makeArtUrl = makeArtUrl + "/?articleCreated=true";
       res.redirect(makeArtUrl);
-      /*
-      res.render("index", {
-        layout: "article",
-        user: req.user,
-        article: doc,
-        createdAt: createdAt,
-        fullname: req.user.fullname,
-        makeArtUrl: makeArtUrl,
-        created: true,
-      });
-*/
     }
   })();
   console.log("Exiting route edit_article");
@@ -501,6 +443,7 @@ app.post("/posted", upload.single("photoupload"), function (req, res, next) {
   let myPath2 = __dirname + "/" + req.file.path;
 
   console.log("req.user._id: " + req.user._id);
+
   // Do the cloudinary upload first and in callback, makeArticle
   cloudinary.uploader.upload(myPath2, {}, (err, myResult) => {
     if (err) {
@@ -509,11 +452,8 @@ app.post("/posted", upload.single("photoupload"), function (req, res, next) {
     }
     console.log("Cloudinary image URL: " + myResult.url);
 
-    let { title, subtitle, txt } = req.body;
-    //let author = new ObjectId(userid._id);
+    let { title, subtitle, txt} = req.body;
     let author = req.user._id;
-    console.log("336 user id in author temp var: " + author);
-
     let link = myResult.url;
     let fullname = req.user.fullname;
 
@@ -535,18 +475,6 @@ app.post("/posted", upload.single("photoupload"), function (req, res, next) {
 
       ///////////////////////////////////////////
       const createdAt = new Date(article.createdAt).toDateString();
-
-      /*
-      res.render("index", {
-        layout: "article",
-        user: req.user,
-        article: article,
-        createdAt: createdAt,
-        fullname: req.user.fullname,
-        makeArtUrl: makeArtUrl,
-        created: true,
-      });
-      */
     })();
   }); // end cloudinary.uploader.upload
 }); // end post to posted route
@@ -585,8 +513,7 @@ const server = app.listen(port, function () {
   console.log("passport-local demo up on port: " + port);
 });
 
-// Gracefully exit on SIGINT - still my terminal not sending SIGINT
-// on Ctrl-C, maybe due to reassigned shortcut for copy?
+// Gracefully exit on SIGINT
 process.on('SIGTERM', () => {
   server.close(() => {
     console.log("SIGINT rec'd. Process terminated")
