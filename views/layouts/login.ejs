@@ -62,14 +62,16 @@
         </div>
       </div>
     </nav>
+    
     <main class="page contact-page"></main>
+    
     <div class="login-dark">
       <section class="portfolio-block contact">
         <div class="container">
           <div class="heading">
             <div
               id="firstLoginAlert"
-              class="d-none alert alert-light fade show mt-4"
+              class="d-none alert alert-light fade show"
               role="alert"
             >
               <strong>Great!</strong> Registration successful. You may log in
@@ -85,11 +87,28 @@
             </div>
 
             <div
-              id="failedLoginAlert"
-              class="d-none alert alert-light fade show mt-4"
+              id="loginFirstAlert"
+              class="d-none alert alert-light fade show"
               role="alert"
             >
-              <strong>Ooops!</strong> Log in failed. Please try again.
+            <!-- If user POSTs to /posted after logging out in another window etc. -->
+              <strong>Ooops!</strong> You must log in before proceeding.
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div
+              id="failedLoginAlert"
+              class="d-none alert alert-light fade show"
+              role="alert"
+            >
+              <strong>Ooops!</strong> Log in failed. Please try again or <a href="/register">register for an account</a>.  
               <button
                 type="button"
                 class="close"
@@ -116,7 +135,8 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> <!-- end section portfolio-block contact-->
+
       <form method="post" action="/login">
         <h2 class="sr-only">Login Form</h2>
         <div class="illustration">
@@ -166,22 +186,31 @@
       // If this is the first time logging in, display any firstLoginAlert
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
+      console.log(queryString);
 
-      if (urlParams.get("firstLogin") === "true") {
+      if (urlParams.get("firstLoginAlert") === "true") {
         const loginAlert = document.querySelector("#firstLoginAlert");
         loginAlert.classList.remove("d-none");
         loginAlert.classList.add("d-block");
       }
-      if (urlParams.get("failedLogin") === "true") {
+      if (urlParams.get("failedLoginAlert") === "true") {
         const loginAlert = document.querySelector("#failedLoginAlert");
         loginAlert.classList.remove("d-none");
         loginAlert.classList.add("d-block");
       }
-      if (urlParams.get("loggedOut") === "true") {
+      if (urlParams.get("loggedOutAlert") === "true") {
         const logoutAlert = document.querySelector("#loggedOutAlert");
         logoutAlert.classList.remove("d-none");
         logoutAlert.classList.add("d-block");
       }
+      // gets triggered if user makes POST to /posted route when not logged in, like
+      // user logged out other window or screwyness like someone trying to hack app
+      if (urlParams.get("loginFirstAlert") === "true") {
+        const logoutAlert = document.querySelector("#loginFirstAlert");
+        logoutAlert.classList.remove("d-none");
+        logoutAlert.classList.add("d-block");
+      }
+
     </script>
   </body>
 </html>

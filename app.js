@@ -182,21 +182,30 @@ app.post("/login", function doLogin(req, res, next) {
     }
     if (!user) {
       console.log("Login failed");
-      return res.redirect("/login/?loginFailed=true");
+      // Removed "return" before res.redirect - urlParam wasn't triggering alert when it was there
+      return res.redirect("/login/?failedLoginAlert=true");
     }
     req.logIn(user, async function (err) {
       if (err) {
         console.log("225 Error logging in");
-        return next(err);
+        // Below was printing stack trace after Error: Failed to serialize user into session
+        //return next(err);
+        // below was an UnhandledPromiseRejectionWarning: Error [ERR_HTTP_HEADERS_SENT]
+        // Cannot set headers after they are sent to client - can't redirect here?
+        // res.redirect("/login/?failedLoginAlert=true");
+        return res.redirect("/login/?failedLoginAlert=true"); 
       }
-      req.user.loginCount = req.user.loginCount + 1;
-      let result = await req.user.save();
+      else{
+        req.user.loginCount = req.user.loginCount + 1;
+        let result = await req.user.save();
 
-      console.log(
-        "230 req.user.loginCount after increment: " + req.user.loginCount
-      );
-      // Successful log in // PARAM FOR LOGINCOUNT WASN"T WORKING HERE.
-      return res.redirect(`/dashboard`);
+        console.log(
+          "230 req.user.loginCount after increment: " + req.user.loginCount
+        );
+        // Successful log in // PARAM FOR LOGINCOUNT WASN"T WORKING HERE.
+        // Possible to add a urlParam to welcome user
+        return res.redirect(`/dashboard/?welcomeUser=true`);
+      } // end else
     });
   })(req, res, next);
 });
@@ -306,6 +315,7 @@ app.get("/article/:articleId", function (req, res, next) {
       (err) => {
         if (err) {
           console.log("Couldn't find article error line 373.");
+          // inside async function it's possible return res.redirect is good
           res.redirect("/dashboard/?articleNotFound=true");
           return next();
         }
@@ -324,6 +334,8 @@ app.get("/article/:articleId", function (req, res, next) {
     });
   })();
 });
+
+//////////////////////////////////// MAJOR WORK TO DO HERE
 
 app.get("/all_articles", function (req, res, next) {
   if (!req.user) {
@@ -346,10 +358,22 @@ app.get("/all_articles", function (req, res, next) {
     // console.dir(articles); // an array
     articles.forEach((curr) => {
 
+
+      ////////////////////////////////////////////////////////////// textVersion
+      /* Trying to replace like dashboard.ejs
       let theText = textVersion(curr.txt, textStyle);
       if (theText.length > 200) {
+        let myUrl = '/article' + curr._id;
+        theText = theText.slice(0, 199) + `...<a href=${myUrl} class="badge badge-primary">more</a>`;
+      }
+      */
+      let theText = htmlToPlainText(curr.txt, textStyle);
+      if(theText.length > 200){
         theText = theText.slice(0, 199) + "...(more)";
       }
+      
+        theText = theText + ` <a href=${myUrl} class="badge badge-primary">full article</a>`;
+      
       curr.txt = theText;
     });
 
@@ -411,10 +435,14 @@ app.post("/edit_article/:articleId", (req, res, next) => {
       await Article.deleteOne({ _id: articleId }, function (err) {
         if (err) {
           console.log("error deleting article");
-          return res.redirect("/dashboard?deleteFailed=true"); // set alert of failure
+          // removed "return" before res.redirect
+          res.redirect("/dashboard?deleteFailed=true"); // set alert of failure
         }
-        console.log("Forwarding to dashboard with deleteSuccess=true param");
-        return res.redirect("/dashboard?deleteSuccess=true");
+        else{
+          // Removing "return"
+          //return res.redirect("/dashboard?deleteSuccess=true");
+          res.redirect("/dashboard?deleteSuccess=true");
+        }
       });
     } // end if deleteArticle
     else {
@@ -442,7 +470,14 @@ app.post("/edit_article/:articleId", (req, res, next) => {
 app.post("/posted", upload.single("photoupload"), function (req, res, next) {
   let myPath2 = __dirname + "/" + req.file.path;
 
-  console.log("req.user._id: " + req.user._id);
+  console.log("posted route entered");
+
+  // If user isn't logged in, redirect them to login page
+  if(req.user == null || req.user._id == null){
+    // here we return res.redirect (rather than using else below). 
+    // Without return (just having res.redirect) (or an else) this route will keep running
+    return res.redirect("/login?loginFirstAlert=true");
+  }
 
   // Do the cloudinary upload first and in callback, makeArticle
   cloudinary.uploader.upload(myPath2, {}, (err, myResult) => {
@@ -499,12 +534,12 @@ app.post("/register", (req, res, next) => {
   newUser.save().then((user) => {
     console.log("saved user");
   });
-  res.redirect("/login/?firstLogin=true");
+  res.redirect("/login/?firstLoginAlert=true");
 });
 
 app.get("/logout", function (req, res) {
   req.logout();
-  res.redirect("/login/?loggedOut=true");
+  res.redirect("/login/?loggedOutAlert=true");
 });
 
 app.use(express.static(__dirname + "/static"));

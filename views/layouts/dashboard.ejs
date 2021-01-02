@@ -325,7 +325,7 @@
             searchResults.classList.remove('d-none');
 
             var origArr = <%- JSON.stringify(articles) %>;
-            
+
             let searchResArts = doSearch(origArr, searchBox.value, titleCheckbox.checked, subtitleCheckbox.checked, txtCheckbox.checked );
             let searchResHtml = "";
             
@@ -349,12 +349,12 @@
               createdAt = createdAt.toString().split(' ').splice(0,4).join(' ');
               // old broken
               //let myUrl = 'http://' + location.hostname + '/article/' + curr._id;
-              let myUrl = "article/" + curr._id;
+              let myUrl = "/article/" + curr._id;
               // suggested via chingu discord
               
               let theText = htmlToPlainText(curr.txt, textStyle);
               if (theText.length > 200) {
-                theText = theText.slice(0, 199) + `...(more)`;
+                theText = theText.slice(0, 199) + `...<a href=${myUrl} class="badge badge-primary">more</a>`;
               }
               curr.txt = theText;
 
